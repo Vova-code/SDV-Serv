@@ -12,13 +12,6 @@ export default function AuthForm() {
             appearance={{ theme: ThemeSupa }}
             providers={[]}
             redirectTo="/auth/callback"
-            localization={{
-                variables: {
-                    sign_in: {
-                        link_text: "Blabla"
-                    }
-                }
-            }}
         />
     )
 }

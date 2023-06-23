@@ -1,14 +1,17 @@
 'use client'
 
-import Navbar from "../../components/Navbar"
+import Navbar from "../../components/molecules/Navbar"
+import {MenuContextProvider} from "../../components/context/MenuContext";
 
 export default function AccountLayout({children}: {
     children: React.ReactNode
 }) {
     return (
-        <section className="h-full bg-slate-100 p-8">
-            <Navbar/>
-            {children}
-        </section>
+        <MenuContextProvider>
+            <section className="h-full bg-slate-100 p-8">
+                <Navbar/>
+                {children}
+            </section>
+        </MenuContextProvider>
     )
 }

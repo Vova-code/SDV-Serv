@@ -3,7 +3,7 @@ const {
   ClientSecretCredential,
   DefaultAzureCredential
 } = require('@azure/identity')
-const { ComputeManagementClient } = require('@azure/arm-compute')
+const { ComputeManagementClient, listByEdgeZone } = require('@azure/arm-compute')
 const { ResourceManagementClient } = require('@azure/arm-resources')
 const { StorageManagementClient } = require('@azure/arm-storage')
 const { NetworkManagementClient } = require('@azure/arm-network')
@@ -16,19 +16,19 @@ let vmImageInfo = null
 let nicInfo = null
 
 // CHANGE THIS - used as prefix for naming resources
-const yourAlias = 'Vova-SDV'
+const yourAlias = 'vovasdv'
 
 // CHANGE THIS - used to add tags to resources
 const projectName = 'sdv-serv-web-app'
 
 // Resource configs
-const location = 'eastus'
+const location = 'francecentral'
 const accType = 'Standard_LRS'
 
 // Ubuntu config for VM
 const publisher = 'Canonical'
 const offer = 'UbuntuServer'
-const sku = '14.04.3-LTS'
+const sku = '18.04-LTS'
 const adminUsername = 'notadmin'
 const adminPassword = 'Pa$$w0rd92'
 
@@ -85,11 +85,10 @@ async function createResourceGroup() {
     location: location,
     tags: { project: projectName }
   }
-  const resCreate = await resourceClient.resourceGroups.createOrUpdate(
+  return await resourceClient.resourceGroups.createOrUpdate(
     resourceGroupName,
     groupParameters
   )
-  return resCreate
 }
 
 async function createStorageAccount() {
@@ -132,12 +131,11 @@ async function createVnet() {
 
 async function getSubnetInfo() {
   console.log('\nGetting subnet info for: ' + subnetName)
-  const getResult = await networkClient.subnets.get(
+  return await networkClient.subnets.get(
     resourceGroupName,
     vnetName,
     subnetName
   )
-  return getResult
 }
 
 async function createPublicIP() {
@@ -187,16 +185,12 @@ async function findVMImage() {
       sku
     )
   )
-  const listResult = new Array()
-  for await (const item of computeClient.virtualMachineImages.list(
+  return await computeClient.virtualMachineImages.list(
     location,
     publisher,
     offer,
     sku
-  )) {
-    listResult.push(item)
-  }
-  return listResult
+  )
 }
 
 async function getNICInfo() {
@@ -222,7 +216,7 @@ async function createVirtualMachine() {
         publisher: publisher,
         offer: offer,
         sku: sku,
-        version: vmImageVersionNumber
+        version: "latest"
       },
       osDisk: {
         name: osDiskName,
@@ -239,7 +233,7 @@ async function createVirtualMachine() {
     networkProfile: {
       networkInterfaces: [
         {
-          id: nicId,
+          id: nicInfo.id,
           primary: true
         }
       ]
@@ -271,14 +265,22 @@ const _generateRandomId = (prefix, existIds) => {
   return newNumber
 }
 
+export const retrieveVmImages = async () => {
+  const result = new Array();
+  for await (const item of computeClient.virtualMachines.listAll()) {
+    result.push(item);
+  }
+  return result
+}
+
 //Random number generator for service names and settings
-const resourceGroupName = _generateRandomId(`${yourAlias}-testrg`, randomIds)
-const vmName = _generateRandomId(`${yourAlias}vm`, randomIds)
-const storageAccountName = _generateRandomId(`${yourAlias}ac`, randomIds)
-const vnetName = _generateRandomId(`${yourAlias}vnet`, randomIds)
-const subnetName = _generateRandomId(`${yourAlias}subnet`, randomIds)
-const publicIPName = _generateRandomId(`${yourAlias}pip`, randomIds)
-const networkInterfaceName = _generateRandomId(`${yourAlias}nic`, randomIds)
-const ipConfigName = _generateRandomId(`${yourAlias}crpip`, randomIds)
-const domainNameLabel = _generateRandomId(`${yourAlias}domainname`, randomIds)
-const osDiskName = _generateRandomId(`${yourAlias}osdisk`, randomIds)
+let resourceGroupName = _generateRandomId(`${yourAlias}-testrg`, randomIds)
+let vmName = _generateRandomId(`${yourAlias}vm`, randomIds)
+let storageAccountName = _generateRandomId(`${yourAlias}ac`, randomIds)
+let vnetName = _generateRandomId(`${yourAlias}vnet`, randomIds)
+let subnetName = _generateRandomId(`${yourAlias}subnet`, randomIds)
+let publicIPName = _generateRandomId(`${yourAlias}pip`, randomIds)
+let networkInterfaceName = _generateRandomId(`${yourAlias}nic`, randomIds)
+let ipConfigName = _generateRandomId(`${yourAlias}crpip`, randomIds)
+let domainNameLabel = _generateRandomId(`${yourAlias}domainname`, randomIds)
+let osDiskName = _generateRandomId(`${yourAlias}osdisk`, randomIds)

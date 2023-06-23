@@ -1,4 +1,4 @@
-import AlternativeAuth from "../components/alternative-auth";
+import AlternativeAuth from "../components/molecules/alternative-auth";
 
 import astronaut from '/public/jonas-verstuyft-flsFQ3UTuKw-unsplash.jpg'
 

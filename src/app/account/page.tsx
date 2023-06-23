@@ -1,32 +1,22 @@
 'use client'
 
-import {Button, Card, Space} from "antd"
-import axios from "axios";
-
-const createVM = () => {
-    axios.get('/azure').then((res) => console.log({res}))
-}
+import {useContext} from "react";
+import MenuContext from "../../components/context/MenuContext";
+import HomeComponent from "../../components/molecules/HomeComponent";
+import VirtualMachinesComponent from "../../components/molecules/VirtualMachinesComponent";
 
 const Account = () => {
+    const { current } = useContext(MenuContext)
+    const displayScreen = () => {
+        if (current === 'home') {
+            return <HomeComponent/>
+        }
+        return <VirtualMachinesComponent/>
+    }
+
     return (
-        <div className='bg-transparent w-full'>
-            <Space className="bg-transparent" size="middle">
-                <Card
-                    className="drop-shadow-md"
-                    title="Nombre de machines en route"
-                    style={{width: 300}}
-                >
-                    <p className="text-green-400 text-5xl font-bold">2</p>
-                </Card>
-                <Card
-                    className="drop-shadow-md"
-                    title="Nombre de machines crées"
-                    style={{width: 300}}
-                >
-                    <p className="text-red-400 text-5xl font-bold">0</p>
-                </Card>
-            </Space>
-            <Button title="Créer une Macine" type="primary" shape="round" onClick={createVM}/>
+        <div className='flex flex-col h-[90%] justify-around items-center bg-transparent w-full'>
+            {displayScreen()}
         </div>
     )
 }
