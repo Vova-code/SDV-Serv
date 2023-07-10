@@ -6,6 +6,7 @@ import HomeComponent from "../../components/molecules/HomeComponent";
 import VirtualMachinesComponent from "../../components/molecules/VirtualMachinesComponent";
 
 const Account = () => {
+    // @ts-ignore
     const { current } = useContext(MenuContext)
     const displayScreen = () => {
         if (current === 'home') {

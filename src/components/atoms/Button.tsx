@@ -1,10 +1,11 @@
 'use client'
 
-import React from 'react'
+import React, {ReactNode} from 'react'
 
 interface ButtonProps {
+    children: ReactNode,
     type: "primary" | "warning" | "danger",
-    handleClick: () => {}
+    handleClick: () => void
 }
 
 const Button = ({children, type, handleClick}: ButtonProps) => {
