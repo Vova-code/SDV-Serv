@@ -1,14 +1,10 @@
-import { createResources } from '@/utils/azure/create-vm'
-import {NextResponse} from "next/server";
-import {Request} from "next/dist/compiled/@edge-runtime/primitives";
+import {createResources} from '@/utils/azure/create-vm'
+import {NextRequest} from "next/server";
 
-export async function GET(request: Request) {
-    await createResources()
-        .then(res => {
-            console.log("Azure Response: ", res)
-            return res
+export async function GET(request: NextRequest) {
+    const createdResource = await createResources();
+    return new Response(JSON.stringify(createdResource),
+        {
+            status: 200,
         })
-        .catch(reason => {
-            return reason
-        });
 }

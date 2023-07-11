@@ -5,16 +5,11 @@ import axios from "axios";
 
 const VirtualMachinesComponent = () => {
     const getVms = () => {
-        axios.get('/azure/listAvailableVM').then(value => console.log(value))
+        axios.get('/azure/listAvailableVM')
     }
     const createVM = async () => {
         await axios.get('/azure/createVm')
-            .then(res => {
-                console.log("Resource: ", {res})
-            })
-            .catch((e) => {
-                console.error(e)
-            })
+
     }
 
     return (
