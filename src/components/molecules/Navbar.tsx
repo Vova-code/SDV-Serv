@@ -4,6 +4,7 @@ import React, {useContext} from 'react'
 import {Menu, MenuProps} from 'antd'
 import {HomeOutlined, LaptopOutlined} from "@ant-design/icons";
 import MenuContext from "../context/MenuContext";
+import {MenuContextProps} from "@/utils/types";
 
 const items: MenuProps['items'] = [
     {
@@ -19,7 +20,7 @@ const items: MenuProps['items'] = [
 ]
 
 const Navbar: React.FC = () => {
-    const { navigate, current } = useContext(MenuContext)
+    const { navigate, current } = useContext(MenuContext) as MenuContextProps
 
     return (
         <Menu

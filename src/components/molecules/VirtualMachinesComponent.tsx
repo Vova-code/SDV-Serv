@@ -1,26 +1,20 @@
-import React from 'react';
-import Button from "../atoms/Button";
+import React, {useContext} from 'react';
 import {Space} from "antd";
-import axios from "axios";
+import CreateVMForm from "@/components/molecules/CreateVMForm";
+import VmFormContext from "@/components/context/VmFormContext";
+import {Loader2} from "lucide-react";
+import {VmFormContextProps} from "@/utils/types";
 
 const VirtualMachinesComponent = () => {
-    const getVms = () => {
-        axios.get('/azure/listAvailableVM')
-    }
-    const createVM = async () => {
-        await axios.get('/azure/createVm')
-
-    }
+    const { isLoading } = useContext(VmFormContext) as VmFormContextProps
 
     return (
         <>
-            <Space className="bg-transparent" size="middle">
-                <Button type="primary" handleClick={getVms}>
-                    Voir mes machines
-                </Button>
-                <Button type="danger" handleClick={createVM}>
-                    Créer une machine
-                </Button>
+            <Space className="flex flex-col bg-transparent" size="middle">
+                {isLoading ?
+                    <Loader2 className="animate-spin" size={40} /> :
+                    <CreateVMForm/>
+                }
             </Space>
         </>
     );

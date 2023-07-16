@@ -1,4 +1,4 @@
-import { setTimeout } from 'timers'
+import {setTimeout} from 'timers'
 
 const util = require('util')
 const {
@@ -28,9 +28,9 @@ const location = 'francecentral'
 const accType = 'Standard_LRS'
 
 // Ubuntu config for VM
-const publisher = 'Canonical'
-const offer = 'UbuntuServer'
-const sku = '18.04-LTS'
+// const publisher = 'Canonical'
+// const offer = 'UbuntuServer'
+// const sku = '18.04-LTS'
 const adminUsername = 'notadmin'
 const adminPassword = 'Pa$$w0rd92'
 
@@ -100,7 +100,7 @@ const generateRandomIds = () => {
 }
 
 // Create resources then manage them (on/off)
-export async function createResources() {
+export async function createResources(vmConfig) {
   let {
     resourceGroupName,
     vmName,
@@ -123,16 +123,24 @@ export async function createResources() {
     subnetInfo = await getSubnetInfo()
     publicIPInfo = await createPublicIP()
     nicInfo = await createNIC(subnetInfo, publicIPInfo)
-    vmImageInfo = await findVMImage()
+    vmImageInfo = await findVMImage(vmConfig.publisher, vmConfig.offer, vmConfig.sku)
     const nicResult = await getNICInfo()
-    const vmInfo = await createVirtualMachine(nicInfo.id, vmImageInfo[0].name)
-
-    setTimeout(() => {
-      console.log('\n⚡ Deleting resource group: ' + resourceGroupName)
-      deleteResourceGroup()
-    }, 60000)
-
-    return vmInfo
+    return await createVirtualMachine(
+        vmConfig.publisher,
+        vmConfig.offer,
+        vmConfig.sku,
+        nicInfo.id,
+        vmImageInfo[0].name
+    )
+        .then(() => {
+          setTimeout(() => {
+            console.log('\n⚡ Deleting resource group: '
+                + resourceGroupName
+                + ' '
+                + new Date().toLocaleTimeString('fr-FR'))
+            deleteResourceGroup()
+          }, 60000)
+        })
   } catch (err) {
     console.log(err)
   }
@@ -245,7 +253,7 @@ export async function createResources() {
     )
   }
 
-  async function findVMImage() {
+  async function findVMImage(publisher, offer, sku) {
     console.log(
       util.format(
         '\nFinding a VM Image for location %s from ' +
@@ -271,7 +279,7 @@ export async function createResources() {
     )
   }
 
-  async function createVirtualMachine() {
+  async function createVirtualMachine(publisher, offer, sku) {
     const vmParameters = {
       location: location,
       osProfile: {
@@ -328,9 +336,13 @@ export async function createResources() {
 
 export const retrieveVmImages = async () => {
   const result = new Array();
-  for await (const item of computeClient.virtualMachines.listAll()) {
-    result.push(item);
+
+  for await (const item of networkClient.publicIPAddresses.listAll()) {
+    result.push(item)
   }
-  console.log(result)
+
+  // for await (const item of computeClient.virtualMachines.listAll()) {
+  //   result.push(item);
+  // }
   return result
 }

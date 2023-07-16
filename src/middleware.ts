@@ -15,6 +15,7 @@ export async function middleware(req: NextRequest) {
 
     // if user is signed in and the current path is / redirect the user to /account
     if (session && req.nextUrl.pathname === '/') {
+        console.log("Session: ", session);
         return NextResponse.redirect(new URL('/account', req.url))
     }
 
