@@ -24,8 +24,8 @@ const FormSchema = z.object({
 })
 
 const CreateVMForm = () => {
-    const {toast} = useToast();
-    const {isLoading, toggleLoading} = useContext(VmFormContext) as VmFormContextProps
+    const { toast } = useToast();
+    const { isLoading, toggleLoading, reloadVmsInfos } = useContext(VmFormContext) as VmFormContextProps
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -60,6 +60,7 @@ const CreateVMForm = () => {
                     ,
                     description: "Votre machine virtuelle à correctement été crée !",
                 })
+                reloadVmsInfos()
             })
     }
 
@@ -84,7 +85,6 @@ const CreateVMForm = () => {
                                 <SelectContent className="bg-gray-200 border-black">
                                     <SelectItem value="Debian10">Debian 10</SelectItem>
                                     <SelectItem value="UbuntuLTS">Ubuntu LTS</SelectItem>
-                                    <SelectItem value="Ubuntu2204">Ubuntu 2204</SelectItem>
                                     <SelectItem value="RHEL">RHEL</SelectItem>
                                 </SelectContent>
                             </Select>

@@ -5,11 +5,20 @@ export interface MenuContextProps {
 
 export interface VmFormContextProps {
     isLoading: boolean,
-    toggleLoading: () => void
+    toggleLoading: () => void,
+    vmsInfo: VmCardAzureInfos[],
+    reloadVmsInfos: () => void
 }
 
 export interface AzureOsConfig {
     publisher: string,
     offer: string,
     sku: string
+}
+
+export interface VmCardAzureInfos {
+    name: string,
+    os: string,
+    osVersion: string,
+    publicIp: string
 }

@@ -2,12 +2,6 @@ import {AzureOsConfig} from "@/utils/types";
 
 export const retrieveOs = (osType: string) => {
     switch (osType) {
-        case "Debian11":
-            return {
-                publisher: "Canonical",
-                offer: "0001-com-ubuntu-server-jammy",
-                sku: "22_04-lts-gen2",
-            } as AzureOsConfig
         case "Debian10":
             return {
                 publisher: "Debian",

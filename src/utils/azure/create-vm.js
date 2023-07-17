@@ -132,7 +132,7 @@ export async function createResources(vmConfig) {
         nicInfo.id,
         vmImageInfo[0].name
     )
-        .then(() => {
+        .finally(() => {
           setTimeout(() => {
             console.log('\n⚡ Deleting resource group: '
                 + resourceGroupName
@@ -155,7 +155,6 @@ export async function createResources(vmConfig) {
     const result = await resourceClient.resourceGroups.beginDeleteAndWait(
       resourceGroupName
     );
-    console.log(JSON.stringify(result));
   }
 
   async function createResourceGroup() {
@@ -333,30 +332,36 @@ export async function createResources(vmConfig) {
     )
   }
 }
-
-export const retrieveVmIpAddresses = async () => {
-  const result = new Array();
-
-  for await (const item of networkClient.publicIPAddresses.listAll()) {
-    result.push(item)
-  }
-  return result
-}
-
 export const retrieveVmOsInfos = async () => {
-  const result = new Array();
+  const result = []
+  const vmInfos = []
 
   for await (const item of resourceClient.resourceGroups.list()) {
-    result.push(item.name)
+    if (item.name !== "NetworkWatcherRG") {
+      result.push(item.name)
+    }
   }
 
   for (const value of result) {
+    let vmInfo = {}
+
     for await (const item of computeClient.virtualMachines.list(value)) {
-      console.log("---------- VM INFOS ----------: ", item)
+      vmInfo = {
+        ...vmInfo,
+        name: item.name,
+        os: item.storageProfile.imageReference.publisher,
+        osVersion: item.storageProfile.imageReference.offer
+      }
     }
+
     for await (const item of networkClient.publicIPAddresses.list(value)) {
-      console.log("---------- IP INFOS ----------: ", item)
+      vmInfo = {
+        ...vmInfo,
+        publicIp: item.ipAddress
+      }
     }
+
+    vmInfos.push(vmInfo)
   }
-  return {}
+  return vmInfos
 }

@@ -1,13 +1,10 @@
-import {retrieveVmIpAddresses, retrieveVmOsInfos} from "@/utils/azure/create-vm";
+import {retrieveVmOsInfos} from "@/utils/azure/create-vm";
+import {VmCardAzureInfos} from "@/utils/types";
 
 export async function GET() {
-    const ipAddresses = await retrieveVmIpAddresses();
-    const osInfos = await retrieveVmOsInfos();
+    const osInfos = await retrieveVmOsInfos() as VmCardAzureInfos[];
 
-    // console.log("---------- IP ----------: ", ipAddresses)
-    // console.log("---------- OS ----------: ", osInfos)
-
-    return new Response(JSON.stringify({ipAddresses, osInfos}),
+    return new Response(JSON.stringify(osInfos),
         {
             status: 200,
         })
