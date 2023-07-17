@@ -8,10 +8,14 @@ import axios from "axios";
 import * as vm from "vm";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Label} from "@/components/ui/label";
-import {Loader2} from "lucide-react";
+import {Loader2, MonitorOff, RotateCcw} from "lucide-react";
 
 const HomeComponent = () => {
     const { vmsInfo, reloadVmsInfos } = useContext(VmFormContext) as VmFormContextProps
+
+    useEffect(() => {
+        reloadVmsInfos()
+    }, [])
 
     useEffect(() => {
     }, [vmsInfo])
@@ -25,18 +29,21 @@ const HomeComponent = () => {
                     )
                 })}
                 {vmsInfo &&
-                    <Card className="w-[350px] drop-shadow-2xl">
-                        <CardHeader>
+                    <Card className="flex flex-col items-center w-[550px] bg-white/90 border-dashed border-2 border-slate-400">
+                        <CardHeader className="flex flex-col items-center">
                             <CardTitle>Pas de machine virtuelle en route...</CardTitle>
-                            <CardDescription>Pensez à en créer une</CardDescription>
+                            <CardDescription className="text-slate-400">Pensez à en créer une</CardDescription>
                         </CardHeader>
-                        <CardFooter className="flex justify-between">
-                            <Button variant="outline">Créer une Vm</Button>
-                        </CardFooter>
+                        <CardContent>
+                            <MonitorOff className="text-slate-400 animate-pulse" size={34} />
+                        </CardContent>
                     </Card>
                 }
             </Space>
-            <Button className="mt-10" onClick={reloadVmsInfos}>Charger les VMs</Button>
+            <Button className="mt-10" onClick={reloadVmsInfos}>
+                <RotateCcw className="mr-2" size={16} />
+                Rafraîchir
+            </Button>
         </>
     );
 };
