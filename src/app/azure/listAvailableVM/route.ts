@@ -1,9 +1,13 @@
-import {retrieveVmImages} from "@/utils/azure/create-vm";
-import {VirtualMachine} from "@azure/arm-compute";
+import {retrieveVmIpAddresses, retrieveVmOsInfos} from "@/utils/azure/create-vm";
 
 export async function GET() {
-    const images = await retrieveVmImages();
-    return new Response(JSON.stringify(images),
+    const ipAddresses = await retrieveVmIpAddresses();
+    const osInfos = await retrieveVmOsInfos();
+
+    // console.log("---------- IP ----------: ", ipAddresses)
+    // console.log("---------- OS ----------: ", osInfos)
+
+    return new Response(JSON.stringify({ipAddresses, osInfos}),
         {
             status: 200,
         })

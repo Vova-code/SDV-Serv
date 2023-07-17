@@ -4,11 +4,11 @@ import {useContext} from "react";
 import MenuContext from "../../components/context/MenuContext";
 import HomeComponent from "../../components/molecules/HomeComponent";
 import VirtualMachinesComponent from "../../components/molecules/VirtualMachinesComponent";
-import VmFormContext, {VmFormContextProvider} from "@/components/context/VmFormContext";
+import {VmFormContextProvider} from "@/components/context/VmFormContext";
+import {MenuContextProps} from "@/utils/types";
 
 const Account = () => {
-    // @ts-ignore
-    const { current } = useContext(MenuContext)
+    const { current } = useContext(MenuContext) as MenuContextProps
     const displayScreen = () => {
         if (current === 'home') {
             return <HomeComponent/>

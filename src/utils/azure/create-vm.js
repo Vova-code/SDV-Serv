@@ -139,7 +139,7 @@ export async function createResources(vmConfig) {
                 + ' '
                 + new Date().toLocaleTimeString('fr-FR'))
             deleteResourceGroup()
-          }, 60000)
+          }, 5 * 60 * 1000)
         })
   } catch (err) {
     console.log(err)
@@ -334,15 +334,29 @@ export async function createResources(vmConfig) {
   }
 }
 
-export const retrieveVmImages = async () => {
+export const retrieveVmIpAddresses = async () => {
   const result = new Array();
 
   for await (const item of networkClient.publicIPAddresses.listAll()) {
     result.push(item)
   }
-
-  // for await (const item of computeClient.virtualMachines.listAll()) {
-  //   result.push(item);
-  // }
   return result
+}
+
+export const retrieveVmOsInfos = async () => {
+  const result = new Array();
+
+  for await (const item of resourceClient.resourceGroups.list()) {
+    result.push(item.name)
+  }
+
+  for (const value of result) {
+    for await (const item of computeClient.virtualMachines.list(value)) {
+      console.log("---------- VM INFOS ----------: ", item)
+    }
+    for await (const item of networkClient.publicIPAddresses.list(value)) {
+      console.log("---------- IP INFOS ----------: ", item)
+    }
+  }
+  return {}
 }

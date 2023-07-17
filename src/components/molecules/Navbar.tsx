@@ -13,8 +13,8 @@ const items: MenuProps['items'] = [
         icon: <HomeOutlined />,
     },
     {
-        label: 'Mes machines',
-        key: 'SubMenu',
+        label: 'Créer une machine',
+        key: 'createVm',
         icon: <LaptopOutlined />,
     },
 ]

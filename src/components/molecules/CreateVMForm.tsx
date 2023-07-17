@@ -11,6 +11,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import VmFormContext from "@/components/context/VmFormContext";
 import axios from "axios";
 import {VmFormContextProps} from "@/utils/types";
+import {Label} from "@/components/ui/label";
 
 const FormSchema = z.object({
     selectedOs: z
@@ -74,16 +75,17 @@ const CreateVMForm = () => {
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
                             >
+                                <Label>Choisisez votre OS</Label>
                                 <FormControl>
                                     <SelectTrigger className="border-black border-2">
                                         <SelectValue placeholder="Choisisez votre OS"/>
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent className="bg-gray-200 border-black">
-                                    <SelectItem value="Debian11">Debian 11</SelectItem>
                                     <SelectItem value="Debian10">Debian 10</SelectItem>
                                     <SelectItem value="UbuntuLTS">Ubuntu LTS</SelectItem>
                                     <SelectItem value="Ubuntu2204">Ubuntu 2204</SelectItem>
+                                    <SelectItem value="RHEL">RHEL</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage/>
