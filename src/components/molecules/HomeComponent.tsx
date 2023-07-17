@@ -1,17 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Space} from "antd";
 import VmInfoCard from "@/components/molecules/VmInfoCard";
 import VmFormContext from "@/components/context/VmFormContext";
-import {VmCardAzureInfos, VmFormContextProps} from "@/utils/types";
+import {VmFormContextProps} from "@/utils/types";
 import {Button} from "@/components/ui/button";
-import axios from "axios";
-import * as vm from "vm";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {Label} from "@/components/ui/label";
-import {Loader2, MonitorOff, RotateCcw} from "lucide-react";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {MonitorOff, RotateCw} from "lucide-react";
 
 const HomeComponent = () => {
-    const { vmsInfo, reloadVmsInfos } = useContext(VmFormContext) as VmFormContextProps
+    const { vmsInfo, reloadVmsInfos, isLoading } = useContext(VmFormContext) as VmFormContextProps
+
+    const emptyVms = vmsInfo && vmsInfo.length === 0
 
     useEffect(() => {
         reloadVmsInfos()
@@ -28,7 +27,7 @@ const HomeComponent = () => {
                         <VmInfoCard key={vm.name} name={vm.name} os={vm.os} osVersion={vm.osVersion} publicIp={vm.publicIp}/>
                     )
                 })}
-                {vmsInfo &&
+                {emptyVms &&
                     <Card className="flex flex-col items-center w-[550px] bg-white/90 border-dashed border-2 border-slate-400">
                         <CardHeader className="flex flex-col items-center">
                             <CardTitle>Pas de machine virtuelle en route...</CardTitle>
@@ -40,9 +39,9 @@ const HomeComponent = () => {
                     </Card>
                 }
             </Space>
-            <Button className="mt-10" onClick={reloadVmsInfos}>
-                <RotateCcw className="mr-2" size={16} />
-                Rafraîchir
+            <Button className="mt-10" onClick={reloadVmsInfos} disabled={isLoading}>
+                <RotateCw className={`mr-2 ${isLoading ? 'animate-spin' : ''}`} size={16} />
+                {isLoading ? 'Chargement' : 'Rafraîchir'}
             </Button>
         </>
     );
