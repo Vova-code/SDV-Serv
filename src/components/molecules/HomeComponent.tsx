@@ -21,7 +21,7 @@ const HomeComponent = () => {
 
     return (
         <>
-            <Space className="flex flex-wrap w-full h-full justify-evenly bg-transparent mt-20" size="large">
+            <Space className="flex flex-wrap w-full h-[80%] justify-evenly bg-transparent" size="large">
                 {vmsInfo?.map((vm) => {
                     return (
                         <VmInfoCard key={vm.name} name={vm.name} os={vm.os} osVersion={vm.osVersion} publicIp={vm.publicIp}/>
@@ -39,7 +39,7 @@ const HomeComponent = () => {
                     </Card>
                 }
             </Space>
-            <Button className="mt-10" onClick={reloadVmsInfos} disabled={isLoading}>
+            <Button onClick={reloadVmsInfos} disabled={isLoading}>
                 <RotateCw className={`mr-2 ${isLoading ? 'animate-spin' : ''}`} size={16} />
                 {isLoading ? 'Chargement' : 'Rafraîchir'}
             </Button>

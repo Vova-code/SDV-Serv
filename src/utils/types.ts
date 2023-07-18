@@ -1,6 +1,6 @@
 export interface MenuContextProps {
     current: string,
-    navigate: () => void
+    navigate: (key: string) => void
 }
 
 export interface VmFormContextProps {

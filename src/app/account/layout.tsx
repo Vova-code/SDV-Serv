@@ -1,8 +1,8 @@
 'use client'
 
-import Navbar from "../../components/molecules/Navbar"
-import {MenuContextProvider} from "../../components/context/MenuContext";
+import {MenuContextProvider} from "@/components/context/MenuContext";
 import {Toaster} from "@/components/ui/toaster";
+import Navbar from "@/components/molecules/Navbar";
 
 export default function AccountLayout({children}: {
     children: React.ReactNode

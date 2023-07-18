@@ -7,8 +7,8 @@ let MenuContext = createContext<MenuContextProps | null>(null);
 export const MenuContextProvider = (props: any) => {
     const [current, setCurrent] = useState('home');
 
-    const navigate: MenuProps['onClick'] = (e) => {
-        setCurrent(e.key);
+    const navigate = (key: string) => {
+        setCurrent(key);
     }
 
     return (

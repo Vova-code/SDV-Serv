@@ -11,14 +11,16 @@ export async function middleware(req: NextRequest) {
         data
     } = await supabase.auth.getSession();
 
+    const session = data.session;
+
     // if user is signed in and the current path is / redirect the user to /account
-    if (data.session && req.nextUrl.pathname === '/') {
+    if (session && req.nextUrl.pathname === '/') {
         console.log("Session: ", data.session);
         return NextResponse.redirect(new URL('/account', req.url))
     }
 
     // if user is not signed in and the current path is not / redirect the user to /
-    if (!data.session && req.nextUrl.pathname !== '/') {
+    if (!session && req.nextUrl.pathname !== '/') {
         await supabase.auth.signOut()
         return NextResponse.redirect(new URL('/', req.url))
     }
