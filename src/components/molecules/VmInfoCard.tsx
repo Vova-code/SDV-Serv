@@ -33,9 +33,6 @@ const VmInfoCard = (vmInfo: VmCardAzureInfos) => {
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="flex justify-center">
-                <Button variant="destructive">Détruire</Button>
-            </CardFooter>
         </Card>
     );
 };

@@ -1,7 +1,7 @@
 import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Button} from "@/components/ui/button";
-import {CheckCircle, Clock, Laptop2, Loader2} from "lucide-react";
+import {CheckCircle, Clock, Laptop2, Loader2, XCircle} from "lucide-react";
 import React, {useContext} from "react";
 import {useToast} from "@/components/ui/use-toast";
 import {useForm} from "react-hook-form";
@@ -25,7 +25,7 @@ const FormSchema = z.object({
 
 const CreateVMForm = () => {
     const { toast } = useToast();
-    const { isLoading, toggleLoading, reloadVmsInfos } = useContext(VmFormContext) as VmFormContextProps
+    const { isLoading, toggleLoading, reloadVmsInfos, checkCredits } = useContext(VmFormContext) as VmFormContextProps
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -46,22 +46,38 @@ const CreateVMForm = () => {
         })
         toggleLoading()
         form.reset({selectedOs: undefined})
-        await axios.post("/azure/createVm", {selectedOs: data.selectedOs})
-            .then(() => {
-                toggleLoading()
-
-                toast({
-                    // @ts-ignore
-                    title:
-                        <div className="flex">
-                            <h1 className="text-xl">Succès</h1>
-                            <CheckCircle className="ml-2" color="#04ff00"/>
-                        </div>
-                    ,
-                    description: "Votre machine virtuelle à correctement été crée !",
+        const availableCredits = await checkCredits();
+        if (availableCredits) {
+            await axios.post("/azure/createVm", {selectedOs: data.selectedOs})
+                .then(() => {
+                    toggleLoading()
+                    toast({
+                        // @ts-ignore
+                        title:
+                            <div className="flex">
+                                <h1 className="text-xl">Succès</h1>
+                                <CheckCircle className="ml-2" color="#04ff00"/>
+                            </div>
+                        ,
+                        description: "Votre machine virtuelle à correctement été crée !",
+                    })
+                    reloadVmsInfos()
                 })
-                reloadVmsInfos()
+        } else {
+            toggleLoading()
+            toast({
+                // @ts-ignore
+                title:
+                    <div className="flex">
+                        <h1 className="text-xl">Création</h1>
+                        <XCircle className="ml-2" color="#fff" />
+                    </div>
+                ,
+                description: "Vous n'avez pas suffisament de crédits pour effectuer cette action.",
+                variant: "destructive",
+                className: "bg-red-600 text-white font-bold"
             })
+        }
     }
 
     return (

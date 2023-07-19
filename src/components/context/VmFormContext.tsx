@@ -2,6 +2,7 @@ import {createContext, useState} from "react";
 import {VmCardAzureInfos, VmFormContextProps} from "@/utils/types";
 import axios from "axios";
 import {useRouter} from "next/navigation";
+import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 
 let VmFormContext = createContext<VmFormContextProps | null>(null);
 
@@ -14,6 +15,7 @@ export const VmFormContextProvider = (props: any) => {
     const routerInstance = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [vmsInfo, setVmsInfo] = useState<VmCardAzureInfos[] | null>(null);
+    const supabaseClient = createClientComponentClient();
 
     const toggleLoading = () => {
         setIsLoading(prevState => !prevState)
@@ -27,6 +29,14 @@ export const VmFormContextProvider = (props: any) => {
         routerInstance.push("/")
     }
 
+    const checkCredits = async () => {
+        const infos = await loadVmInfos();
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        const credits = user?.user_metadata?.credits;
+
+        return credits > 0 && infos.length < credits;
+    }
+
     return (
         <VmFormContext.Provider
             {...props}
@@ -34,7 +44,8 @@ export const VmFormContextProvider = (props: any) => {
                 isLoading,
                 toggleLoading,
                 vmsInfo,
-                reloadVmsInfos
+                reloadVmsInfos,
+                checkCredits
             }}
         />
     )

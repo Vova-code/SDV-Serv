@@ -7,7 +7,8 @@ export interface VmFormContextProps {
     isLoading: boolean,
     toggleLoading: () => void,
     vmsInfo: VmCardAzureInfos[],
-    reloadVmsInfos: () => void
+    reloadVmsInfos: () => void,
+    checkCredits: () => boolean
 }
 
 export interface AzureOsConfig {
